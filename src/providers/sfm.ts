@@ -60,18 +60,17 @@ export class SFM {
   }
 
   getFilesList(){
-    this.file.listDir(cordova.file.applicationDirectory, '').then(
-      (currFiles) => {
-        // do something
-        console.log("pppp")
-        console.log(currFiles);
-        return currFiles;
-      }
-    ).catch(
-      (err) => {
-        // do something
-        console.log(err);
-      }
-    );
+    // this.file.listDir(cordova.file.externalRootDirectory, "Audio").then(
+    //   (currFiles) => {
+    //     // do something
+    //     console.log("pppp")
+    //     console.log(currFiles);
+    //   }
+    // ).catch(
+    //   (err) => {
+    //     // do something
+    //     console.log(err);
+    //   }
+    // );
   }
 }
