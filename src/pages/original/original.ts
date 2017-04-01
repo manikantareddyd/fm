@@ -24,7 +24,7 @@ export class OriginalPage {
     public navParams: NavParams,
     public sfm: SFM
   ) {
-    // this.getFilesList();
+    this.getFilesList();
   }
 
   ionViewDidLoad() {
