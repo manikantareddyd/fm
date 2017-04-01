@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { SFM } from "../../providers/sfm";
+
+import { ContentPage } from '../content/content';
+import { TimelinePage } from '../timeline/timeline';
+import { TypePage } from '../type/type';
+
 /*
   Generated class for the Original page.
 
@@ -12,14 +17,14 @@ import { SFM } from "../../providers/sfm";
   templateUrl: 'original.html'
 })
 export class OriginalPage {
-  current;
+  current = null;
   files;
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
     public sfm: SFM
   ) {
-    this.getFilesList();
+    // this.getFilesList();
   }
 
   ionViewDidLoad() {
@@ -30,5 +35,18 @@ export class OriginalPage {
   {
     this.files = this.sfm.getFilesList();
   }
+
+  gotoContentPage(current){
+    this.navCtrl.push(ContentPage);
+  }
+  
+  gotoTimelinePage(current){
+    this.navCtrl.push(TimelinePage);
+  }
+
+  gotoTypePage(current){
+    this.navCtrl.push(TypePage);
+  }
+
 
 }
