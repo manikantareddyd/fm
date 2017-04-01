@@ -37,15 +37,24 @@ export class OriginalPage {
   }
 
   gotoContentPage(current){
-    this.navCtrl.push(ContentPage);
+    this.navCtrl.push(ContentPage,
+    {
+      current: current
+    });
   }
   
   gotoTimelinePage(current){
-    this.navCtrl.push(TimelinePage);
+    this.navCtrl.push(TimelinePage,
+    {
+      current: current
+    });
   }
 
   gotoTypePage(current){
-    this.navCtrl.push(TypePage);
+    this.navCtrl.push(TypePage,
+    {
+      current: current
+    });
   }
 
 

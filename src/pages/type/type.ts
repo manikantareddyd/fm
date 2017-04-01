@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
+import { OriginalPage } from '../original/original';
+import { ContentPage } from '../content/content';
+import { TimelinePage } from '../timeline/timeline';
 /*
   Generated class for the Type page.
 
@@ -18,5 +21,26 @@ export class TypePage {
   ionViewDidLoad() {
     console.log('ionViewDidLoad TypePage');
   }
+  
+  gotoOriginalPage(current)
+  {
+    this.navCtrl.push(OriginalPage,
+    {
+      current: current
+    });
+  }
 
+  gotoContentPage(current){
+    this.navCtrl.push(ContentPage,
+    {
+      current: current
+    });
+  }
+
+  gotoTimelinePage(current){
+    this.navCtrl.push(TimelinePage,
+    {
+      current: current
+    });
+  }
 }
