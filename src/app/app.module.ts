@@ -5,7 +5,7 @@ import { OriginalPage } from '../pages/original/original';
 import { ContentPage } from '../pages/content/content';
 import { TimelinePage } from '../pages/timeline/timeline';
 import { TypePage } from '../pages/type/type';
-import { TabsPage } from '../pages/tabs/tabs';
+import { IonicStorageModule } from '@ionic/storage';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -13,19 +13,18 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 @NgModule({
   declarations: [
     MyApp,
-    TabsPage,
     OriginalPage,
     ContentPage,
     TimelinePage,
     TypePage
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    TabsPage,
     OriginalPage,
     ContentPage,
     TimelinePage,
