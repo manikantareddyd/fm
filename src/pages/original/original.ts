@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-
+import { SFM } from "../../providers/sfm";
 /*
   Generated class for the Original page.
 
@@ -13,10 +13,22 @@ import { NavController, NavParams } from 'ionic-angular';
 })
 export class OriginalPage {
   current;
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  files;
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public sfm: SFM
+  ) {
+    this.getFilesList();
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad OriginalPage');
+  }
+  
+  getFilesList()
+  {
+    this.files = this.sfm.getFilesList();
   }
 
 }

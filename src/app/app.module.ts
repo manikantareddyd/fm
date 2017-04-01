@@ -5,8 +5,10 @@ import { OriginalPage } from '../pages/original/original';
 import { ContentPage } from '../pages/content/content';
 import { TimelinePage } from '../pages/timeline/timeline';
 import { TypePage } from '../pages/type/type';
+import { SFM } from '../providers/sfm';
 import { IonicStorageModule } from '@ionic/storage';
 
+import { File } from '@ionic-native/file';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -33,7 +35,12 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {
+      provide: ErrorHandler, 
+      useClass: IonicErrorHandler,
+    },
+    SFM,
+    File
   ]
 })
 export class AppModule {}
