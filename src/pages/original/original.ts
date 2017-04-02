@@ -6,7 +6,7 @@ import { ContentPage } from '../content/content';
 import { TimelinePage } from '../timeline/timeline';
 import { TypePage } from '../type/type';
 import { FileOpener } from '@ionic-native/file-opener';
-
+import { Mime } from "../../providers/mime";
 /*
   Generated class for the Original page.
 
@@ -27,6 +27,7 @@ export class OriginalPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     public sfm: SFM,
+    public mime: Mime,
     public events: Events,
     public file: File,
     public fileOpener: FileOpener
@@ -55,7 +56,10 @@ export class OriginalPage {
   navigateToSubDir(newRoot){
     if(newRoot['isFile']){
       console.log(newRoot);
-      this.fileOpener.open(newRoot['nativeURL'], "text/plain")
+      var mim = this.mime.getMime(newRoot['name']);
+      if(mim == "boo")
+        return;
+      this.fileOpener.open(newRoot['nativeURL'], mim)
       .then(()=>
         console.log("file open")
       ).catch((err)=>

@@ -8,6 +8,7 @@ import { TimelinePage } from '../pages/timeline/timeline';
 import { TypePage } from '../pages/type/type';
 import { TopicPage } from '../pages/topic/topic';
 import { SFM } from '../providers/sfm';
+import { Mime } from '../providers/mime';
 import { IonicStorageModule } from '@ionic/storage';
 import { FileOpener } from '@ionic-native/file-opener';
 
@@ -47,6 +48,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
       useClass: IonicErrorHandler,
     },
     SFM,
+    Mime,
     File,
     FileOpener
   ]
