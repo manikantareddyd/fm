@@ -15,7 +15,7 @@
 
 <ion-content padding>
   <ion-list *ngFor="let file of files" inset>
-    <ion-item >
+    <ion-item (click)="openFile(file)" >
       {{ file['name'] }}
     </ion-item>
   </ion-list>

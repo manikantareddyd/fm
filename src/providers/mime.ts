@@ -138,7 +138,7 @@ export class Mime {
     try{
       mime = mimeTypes[ext];
     }
-    catch{
+    catch(e){
       mime = "boo";
     }
     return mime;
