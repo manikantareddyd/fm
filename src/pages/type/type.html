@@ -19,5 +19,9 @@
 
 
 <ion-content padding>
-
+  <ion-list *ngFor="let type of types" inset>
+    <ion-item (click)="navigateToSubDir(type)">
+      {{ type }}
+    </ion-item>
+  </ion-list>
 </ion-content>

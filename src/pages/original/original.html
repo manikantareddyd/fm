@@ -21,7 +21,11 @@
 <ion-content padding>
   <ion-list *ngFor="let file of files" inset>
     <ion-item (click)="navigateToSubDir(file)">
-      {{  file['name']  }}
+      <button ion-item>
+        <ion-icon *ngIf="file['isFile']" name="document" item-left></ion-icon>
+        <ion-icon *ngIf="file['isDirectory']" name="folder" item-left></ion-icon>
+        {{ file['name'] }}
+      </button>
     </ion-item>
   </ion-list>
 </ion-content>

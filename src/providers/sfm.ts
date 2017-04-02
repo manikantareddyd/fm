@@ -3,6 +3,7 @@ import { Events } from 'ionic-angular';
 import { Http, Headers, RequestOptions } from '@angular/http';
 import { File } from '@ionic-native/file';
 import { Storage } from '@ionic/storage';
+import { Mime } from "../providers/mime"
 import 'rxjs/add/operator/map';
 
 /*
@@ -18,13 +19,16 @@ declare var cordova: any;
 export class SFM {
   KEY_FILES = 'st.files';
   KEY_TOPICS = 'st.topics';
+  KEY_TYPES = 'st.types';
   files = [];
   topicsSet = new Set();
+  types = new Set();
   constructor(
     public http: Http,
     public storage: Storage,
     public file: File,
-    public events: Events
+    public events: Events,
+    public mime: Mime
   ) {
     console.log('Hello SFM Provider');
   }
@@ -112,6 +116,8 @@ export class SFM {
   }
   
   createFileEntry(fileEntry){
+    if(fileEntry['name'].split(".").pop() == "txt")
+      return;
     var present = 0;
     this.files.forEach(element => {
       if(element['name'] == fileEntry['name'])
@@ -122,16 +128,25 @@ export class SFM {
     let fileKey = this.generateFileKey();
     var newFile = fileEntry;
     newFile['key'] = fileKey;
-    console.log(newFile);
+    newFile['mime'] = this.mime.getMime(newFile['name']);
+    
+    this.types.add(newFile['mime'].split("/")[0]);
+    this.storage.set(this.KEY_TOPICS, this.types);
+    
     this.files[fileKey] = newFile;
-    console.log(this.files);
     this.storage.set(this.KEY_FILES, this.files);
+    
     this.populateMetaData(fileKey);
     this.events.publish("file entry created");
   }
 
   populateMetaData(key){
-    this.file.readAsText(this.file.externalRootDirectory, this.files[key]['fullPath'].slice(1)).then(
+    var filename = this.files[key]['fullPath'].slice(1);
+    filename = filename.split(".");
+    filename.pop();
+    filename.push("txt");
+    filename = filename.join(".");
+    this.file.readAsText(this.file.externalRootDirectory, filename).then(
       (text) => {
         console.log(text);
         this.populateTopics(key, text);
@@ -175,6 +190,10 @@ export class SFM {
 
   getFilesList(){
     return this.files;
+  }
+
+  getTypes(){
+    return this.types;
   }
 
   getTopics(){

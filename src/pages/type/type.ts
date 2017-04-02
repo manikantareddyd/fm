@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-
+import { NavController, NavParams, Events } from 'ionic-angular';
+import { SFM } from "../../providers/sfm";
 import { OriginalPage } from '../original/original';
 import { ContentPage } from '../content/content';
 import { TimelinePage } from '../timeline/timeline';
@@ -15,13 +15,27 @@ import { TimelinePage } from '../timeline/timeline';
   templateUrl: 'type.html'
 })
 export class TypePage {
-
-  constructor(public navCtrl: NavController, public navParams: NavParams) {}
+  types;
+  constructor(
+    public navCtrl: NavController, 
+    public navParams: NavParams,
+    public events: Events,
+    public sfm: SFM
+  ) {
+    events.subscribe("file entry created", () => {
+      this.types = this.sfm.getTypes();
+    });
+  }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TypePage');
   }
   
+  
+
+
+
+
   gotoOriginalPage(current)
   {
     this.navCtrl.push(OriginalPage,

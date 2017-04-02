@@ -72,7 +72,6 @@ export class OriginalPage {
         root: newRoot
       });
     }
-
   }
 
   getFilesList(root)
