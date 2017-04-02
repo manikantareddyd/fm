@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Events } from 'ionic-angular';
-import { Http, Headers, RequestOptions } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { File } from '@ionic-native/file';
 import { Storage } from '@ionic/storage';
 import { Mime } from "../providers/mime"
@@ -77,7 +77,7 @@ export class SFM {
   }
 
   traverseFS(root){
-    if(root[0]==="/")
+    if(root[0]=="/")
       root = root.slice(1);
     this.file.listDir(this.file.externalRootDirectory, root).then(
       (currFiles) => 
@@ -116,28 +116,50 @@ export class SFM {
   }
   
   createFileEntry(fileEntry){
-    if(fileEntry['name'].split(".").pop() == "txt")
+    // console.log("current file", fileEntry, "name", fileEntry['name']);
+    var name = fileEntry['name'];
+    var ext = name.split('.').pop();
+    // console.log("1", name, ext);
+    
+    if(ext == "txt")
+    {
+      console.log("txt found");
       return;
-    var present = 0;
-    this.files.forEach(element => {
-      if(element['name'] == fileEntry['name'])
-        present = 1;
-    });
-    if(present == 1)
-      return;
-    let fileKey = this.generateFileKey();
-    var newFile = fileEntry;
-    newFile['key'] = fileKey;
-    newFile['mime'] = this.mime.getMime(newFile['name']);
-    
-    this.types.add(newFile['mime'].split("/")[0]);
-    this.storage.set(this.KEY_TYPES, this.types);
-    
-    this.files[fileKey] = newFile;
-    this.storage.set(this.KEY_FILES, this.files);
-    
-    this.populateMetaData(fileKey);
-    this.events.publish("file entry created");
+    }
+    else
+    {
+      var present = 0;
+      this.files.forEach(element => {
+        if(element['name'] == fileEntry['name'])
+        {
+          console.log("already in db");
+          present = 1;
+        }
+      });
+      if(present == 1)
+      {
+        console.log("already in db");
+        return;
+      }
+      else
+      {
+        let fileKey = this.generateFileKey();
+        var newFile = fileEntry;
+        newFile['key'] = fileKey;
+        newFile['mime'] = this.mime.getMime(newFile['name']);
+        if(newFile['mime'] == "misc")
+          this.types.add("misc")
+        else
+          this.types.add(newFile['mime'].split("/")[0]);
+        this.storage.set(this.KEY_TYPES, this.types);
+        
+        this.files[fileKey] = newFile;
+        this.storage.set(this.KEY_FILES, this.files);
+        
+        this.populateMetaData(fileKey);
+        this.events.publish("file entry created");
+      }
+    }
   }
 
   populateMetaData(key){
@@ -169,7 +191,7 @@ export class SFM {
       }
     );
     let content = "text=" + encodeURIComponent(text) + "&extractors=" + encodeURIComponent("topics");
-    this.sleep(1000);
+    // this.sleep(1000);
     this.http.post('https://api.textrazor.com', content, {headers: headers})
     .subscribe(res => {
       var topics = res.json()['response']['topics'];

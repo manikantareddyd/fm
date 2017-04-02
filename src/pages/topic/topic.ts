@@ -34,7 +34,7 @@ export class TopicPage {
     if(newRoot['isFile']){
       console.log(newRoot);
       var mim = this.mime.getMime(newRoot['name']);
-      if(mim == "boo")
+      if(mim == "misc")
         return;
       this.fileOpener.open(newRoot['nativeURL'], mim)
       .then(()=>

@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, Events } from 'ionic-angular';
 import { SFM } from "../../providers/sfm";
-import { OriginalPage } from '../original/original';
-import { ContentPage } from '../content/content';
-import { TimelinePage } from '../timeline/timeline';
 import { FileTypePage } from "../file-type/file-type";
 /*
   Generated class for the Type page.
@@ -22,7 +19,6 @@ export class TypePage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     public events: Events,
-    public ftp: FileTypePage,
     public sfm: SFM
   ) {
     this.types = this.sfm.getTypes();

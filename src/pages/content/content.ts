@@ -2,9 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, Events } from 'ionic-angular';
 
 import { SFM } from "../../providers/sfm";
-import { OriginalPage } from '../original/original';
-import { TimelinePage } from '../timeline/timeline';
-import { TypePage } from '../type/type';
 import { TopicPage } from '../topic/topic';
 /*
   Generated class for the Content page.
@@ -46,6 +43,7 @@ export class ContentPage {
     var num;
     for(num = 0; num < this.files.length; num++)
     {
+      console.log("topics in file", this.files[num]['topics']);
       this.files[num]['topics'].forEach(element => {
         if(topic == element)
         {

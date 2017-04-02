@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
-import { OriginalPage } from '../original/original';
-import { ContentPage } from '../content/content';
-import { TypePage } from '../type/type';
 
 /*
   Generated class for the Timeline page.

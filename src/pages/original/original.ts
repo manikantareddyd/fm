@@ -2,9 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, NavParams,  Events } from 'ionic-angular';
 import { File } from '@ionic-native/file';
 import { SFM } from "../../providers/sfm";
-import { ContentPage } from '../content/content';
-import { TimelinePage } from '../timeline/timeline';
-import { TypePage } from '../type/type';
 import { FileOpener } from '@ionic-native/file-opener';
 import { Mime } from "../../providers/mime";
 /*
@@ -55,9 +52,8 @@ export class OriginalPage {
 
   navigateToSubDir(newRoot){
     if(newRoot['isFile']){
-      console.log(newRoot);
       var mim = this.mime.getMime(newRoot['name']);
-      if(mim == "boo")
+      if(mim == "misc")
         return;
       this.fileOpener.open(newRoot['nativeURL'], mim)
       .then(()=>
@@ -82,11 +78,13 @@ export class OriginalPage {
     this.file.listDir(this.file.externalRootDirectory, root).then(
       (currFiles) => {
         var tmp = []
+        console.log("curr files", currFiles);
         currFiles.forEach(element => {
           var ext = element['name'].split(".").pop();
           if(ext != "txt")
             tmp.push(element);
         });
+        console.log("tmp", tmp);
         this.files = tmp;
       }
     ).catch(
