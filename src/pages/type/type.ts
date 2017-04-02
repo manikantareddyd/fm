@@ -4,6 +4,7 @@ import { SFM } from "../../providers/sfm";
 import { OriginalPage } from '../original/original';
 import { ContentPage } from '../content/content';
 import { TimelinePage } from '../timeline/timeline';
+import { FileTypePage } from "../file-type/file-type";
 /*
   Generated class for the Type page.
 
@@ -16,45 +17,41 @@ import { TimelinePage } from '../timeline/timeline';
 })
 export class TypePage {
   types;
+  files;
   constructor(
     public navCtrl: NavController, 
     public navParams: NavParams,
     public events: Events,
+    public ftp: FileTypePage,
     public sfm: SFM
   ) {
+    this.types = this.sfm.getTypes();
+    this.files = this.sfm.getFilesList();
     events.subscribe("file entry created", () => {
       this.types = this.sfm.getTypes();
+      this.files = this.sfm.getFilesList();
     });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad TypePage');
   }
-  
-  
 
-
-
-
-  gotoOriginalPage(current)
-  {
-    this.navCtrl.push(OriginalPage,
+  navigateToSubDir(type){
+    var filesList = [];
+    var num;
+    for(num = 0; num < this.files.length; num++)
     {
-      current: current
-    });
-  }
-
-  gotoContentPage(current){
-    this.navCtrl.push(ContentPage,
-    {
-      current: current
-    });
-  }
-
-  gotoTimelinePage(current){
-    this.navCtrl.push(TimelinePage,
-    {
-      current: current
-    });
+      var fileType = this.files[num]['mime'].split("/")[0];
+      if(fileType == type)
+        filesList.push(this.files[num]);
+    }
+    this.navCtrl.push(
+      FileTypePage,
+      {
+        files: filesList,
+        type: type
+      }
+    );
   }
 }

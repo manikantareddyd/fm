@@ -131,7 +131,7 @@ export class SFM {
     newFile['mime'] = this.mime.getMime(newFile['name']);
     
     this.types.add(newFile['mime'].split("/")[0]);
-    this.storage.set(this.KEY_TOPICS, this.types);
+    this.storage.set(this.KEY_TYPES, this.types);
     
     this.files[fileKey] = newFile;
     this.storage.set(this.KEY_FILES, this.files);
@@ -148,7 +148,6 @@ export class SFM {
     filename = filename.join(".");
     this.file.readAsText(this.file.externalRootDirectory, filename).then(
       (text) => {
-        console.log(text);
         this.populateTopics(key, text);
       }
     ).catch(
@@ -158,6 +157,9 @@ export class SFM {
     )
   }
 
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
   populateTopics(key, text){
     let headers = new Headers(
       {
@@ -167,6 +169,7 @@ export class SFM {
       }
     );
     let content = "text=" + encodeURIComponent(text) + "&extractors=" + encodeURIComponent("topics");
+    this.sleep(1000);
     this.http.post('https://api.textrazor.com', content, {headers: headers})
     .subscribe(res => {
       var topics = res.json()['response']['topics'];
@@ -193,7 +196,7 @@ export class SFM {
   }
 
   getTypes(){
-    return this.types;
+    return Array.from(this.types);
   }
 
   getTopics(){

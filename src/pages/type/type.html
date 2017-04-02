@@ -21,6 +21,7 @@
 <ion-content padding>
   <ion-list *ngFor="let type of types" inset>
     <ion-item (click)="navigateToSubDir(type)">
+      <ion-icon name="folder" item-left></ion-icon>
       {{ type }}
     </ion-item>
   </ion-list>

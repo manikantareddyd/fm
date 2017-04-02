@@ -13,6 +13,7 @@
 <ion-content padding>
   <ion-list *ngFor="let topic of topics" inset>
     <ion-item (click)="navigateToSubDir(topic)">
+      <ion-icon name="folder" item-left></ion-icon>
       {{ topic }}
     </ion-item>
   </ion-list>

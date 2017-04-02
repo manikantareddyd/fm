@@ -7,6 +7,7 @@ import { ContentPage } from '../pages/content/content';
 import { TimelinePage } from '../pages/timeline/timeline';
 import { TypePage } from '../pages/type/type';
 import { TopicPage } from '../pages/topic/topic';
+import { FileTypePage } from '../pages/file-type/file-type';
 import { SFM } from '../providers/sfm';
 import { Mime } from '../providers/mime';
 import { IonicStorageModule } from '@ionic/storage';
@@ -24,7 +25,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ContentPage,
     TimelinePage,
     TypePage,
-    TopicPage
+    TopicPage,
+    FileTypePage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -38,7 +40,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     ContentPage,
     TimelinePage,
     TypePage,
-    TopicPage
+    TopicPage,
+    FileTypePage
   ],
   providers: [
     StatusBar,

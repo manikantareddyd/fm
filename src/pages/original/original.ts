@@ -78,9 +78,16 @@ export class OriginalPage {
   {
     if(root[0]==="/")
       root = root.slice(1);
+    
     this.file.listDir(this.file.externalRootDirectory, root).then(
       (currFiles) => {
-        this.files = currFiles;
+        var tmp = []
+        currFiles.forEach(element => {
+          var ext = element['name'].split(".").pop();
+          if(ext != "txt")
+            tmp.push(element);
+        });
+        this.files = tmp;
       }
     ).catch(
       (err) => {
@@ -88,27 +95,4 @@ export class OriginalPage {
       }
     );
   }
-
-  gotoContentPage(current){
-    this.navCtrl.push(ContentPage,
-    {
-      current: current
-    });
-  }
-  
-  gotoTimelinePage(current){
-    this.navCtrl.push(TimelinePage,
-    {
-      current: current
-    });
-  }
-
-  gotoTypePage(current){
-    this.navCtrl.push(TypePage,
-    {
-      current: current
-    });
-  }
-
-
 }

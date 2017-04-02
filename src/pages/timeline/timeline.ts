@@ -23,26 +23,4 @@ export class TimelinePage {
     console.log('ionViewDidLoad TimelinePage');
   }
 
-  gotoOriginalPage(current)
-  {
-    this.navCtrl.push(OriginalPage,
-    {
-      current: current
-    });
-  }
-
-  gotoContentPage(current){
-    this.navCtrl.push(ContentPage,
-    {
-      current: current
-    });
-  }
-
-  gotoTypePage(current){
-    this.navCtrl.push(TypePage,
-    {
-      current: current
-    });
-  }
-
 }

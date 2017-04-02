@@ -62,25 +62,4 @@ export class ContentPage {
     );
   }
 
-  gotoOriginalPage(current)
-  {
-    this.navCtrl.push(OriginalPage,
-    {
-      current: current
-    });
-  }
-
-  gotoTimelinePage(current){
-    this.navCtrl.push(TimelinePage,
-    {
-      current: current
-    });
-  }
-
-  gotoTypePage(current){
-    this.navCtrl.push(TypePage,
-    {
-      current: current
-    });
-  }
 }
