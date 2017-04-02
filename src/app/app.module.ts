@@ -6,8 +6,10 @@ import { OriginalPage } from '../pages/original/original';
 import { ContentPage } from '../pages/content/content';
 import { TimelinePage } from '../pages/timeline/timeline';
 import { TypePage } from '../pages/type/type';
+import { TopicPage } from '../pages/topic/topic';
 import { SFM } from '../providers/sfm';
 import { IonicStorageModule } from '@ionic/storage';
+import { FileOpener } from '@ionic-native/file-opener';
 
 import { File } from '@ionic-native/file';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -20,7 +22,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     OriginalPage,
     ContentPage,
     TimelinePage,
-    TypePage
+    TypePage,
+    TopicPage
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -33,7 +36,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     OriginalPage,
     ContentPage,
     TimelinePage,
-    TypePage
+    TypePage,
+    TopicPage
   ],
   providers: [
     StatusBar,
@@ -43,7 +47,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
       useClass: IonicErrorHandler,
     },
     SFM,
-    File
+    File,
+    FileOpener
   ]
 })
 export class AppModule {}

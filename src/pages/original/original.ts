@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-import { SFM } from "../../providers/sfm";
-
+import { NavController, NavParams,  Events } from 'ionic-angular';
 import { File } from '@ionic-native/file';
+import { SFM } from "../../providers/sfm";
 import { ContentPage } from '../content/content';
 import { TimelinePage } from '../timeline/timeline';
 import { TypePage } from '../type/type';
+import { FileOpener } from '@ionic-native/file-opener';
 
 /*
   Generated class for the Original page.
@@ -27,17 +27,22 @@ export class OriginalPage {
     public navCtrl: NavController, 
     public navParams: NavParams,
     public sfm: SFM,
-    public file: File
+    public events: Events,
+    public file: File,
+    public fileOpener: FileOpener
   ) {
     this.root = this.navParams.get("root");
-    console.log("curr root", this.root);
     if(this.root==null)
       this.getFilesList("test");
     else
       this.getFilesList(this.root);
     
+    events.subscribe("file entry created", () => {
+      this.files = this.sfm.getFilesList();
+    });
     this.initFS();
   }
+
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad OriginalPage');
@@ -48,26 +53,34 @@ export class OriginalPage {
   }
 
   navigateToSubDir(newRoot){
-    console.log("new root", newRoot);
-    this.navCtrl.push(OriginalPage,{
-      root: newRoot
-    });
+    if(newRoot['isFile']){
+      console.log(newRoot);
+      this.fileOpener.open(newRoot['nativeURL'], "text/plain")
+      .then(()=>
+        console.log("file open")
+      ).catch((err)=>
+        console.log(err)
+      );
+    }
+    else{
+      newRoot = newRoot['fullPath'];
+      this.navCtrl.push(OriginalPage,{
+        root: newRoot
+      });
+    }
+
   }
 
   getFilesList(root)
   {
     if(root[0]==="/")
       root = root.slice(1);
-    this.file.listDir(cordova.file.externalRootDirectory, root).then(
+    this.file.listDir(this.file.externalRootDirectory, root).then(
       (currFiles) => {
-        // do something
-        console.log("pppp")
-        console.log(currFiles);
         this.files = currFiles;
       }
     ).catch(
       (err) => {
-        // do something
         console.log(err);
       }
     );

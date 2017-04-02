@@ -20,7 +20,7 @@
 
 <ion-content padding>
   <ion-list *ngFor="let file of files" inset>
-    <ion-item (click)="navigateToSubDir(file['fullPath'])">
+    <ion-item (click)="navigateToSubDir(file)">
       {{  file['name']  }}
     </ion-item>
   </ion-list>

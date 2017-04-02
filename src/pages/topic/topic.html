@@ -1,19 +1,22 @@
 <!--
-  Generated template for the Content page.
+  Generated template for the Topic page.
 
   See http://ionicframework.com/docs/v2/components/#navigation for more info on
   Ionic pages and navigation.
 -->
 <ion-header>
+
   <ion-navbar>
-    <ion-title>Content</ion-title>
+    <ion-title>{{ topic }}</ion-title>
   </ion-navbar>
+
 </ion-header>
 
+
 <ion-content padding>
-  <ion-list *ngFor="let topic of topics" inset>
-    <ion-item (click)="navigateToSubDir(topic)">
-      {{ topic }}
+  <ion-list *ngFor="let file of files" inset>
+    <ion-item >
+      {{ file['name'] }}
     </ion-item>
   </ion-list>
 </ion-content>

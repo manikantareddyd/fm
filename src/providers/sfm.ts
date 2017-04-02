@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Events } from 'ionic-angular';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import { File } from '@ionic-native/file';
 import { Storage } from '@ionic/storage';
 import 'rxjs/add/operator/map';
@@ -16,11 +17,14 @@ declare var cordova: any;
 @Injectable()
 export class SFM {
   KEY_FILES = 'st.files';
-  files;
+  KEY_TOPICS = 'st.topics';
+  files = [];
+  topicsSet = new Set();
   constructor(
     public http: Http,
     public storage: Storage,
-    public file: File
+    public file: File,
+    public events: Events
   ) {
     console.log('Hello SFM Provider');
   }
@@ -48,21 +52,42 @@ export class SFM {
   */
 
   initFS(){
-    this.traverseFS("test");
+    this.storage.get(this.KEY_TOPICS).then((topicsSet) => {
+        if(!topicsSet){
+          this.topicsSet = new Set();
+          this.storage.get(this.KEY_FILES).then((files) => {
+              if(!files){
+                this.files = [];
+              }
+              else{
+                this.files = files;
+              }
+              this.traverseFS("test");
+          })
+        }
+        else{
+          this.topicsSet = new Set(topicsSet);
+        }
+        this.traverseFS("test");
+      })
   }
 
   traverseFS(root){
     if(root[0]==="/")
       root = root.slice(1);
-    this.file.listDir(cordova.file.externalRootDirectory, root).then(
-      (currFiles) => {
+    this.file.listDir(this.file.externalRootDirectory, root).then(
+      (currFiles) => 
+      {
         var num = 0;
-        for(num = 0; num < currFiles.length; num++){
-          if(currFiles[num]['isDirectory']){
+        for(num = 0; num < currFiles.length; num++)
+        {
+          if(currFiles[num]['isDirectory'])
+          {
             // If directory go inside
-            this.traverseFS(currFiles[num]['fullPath'])
+            this.traverseFS(currFiles[num]['fullPath']);
           }
-          else{
+          else
+          {
             // If FIle add to db
             this.createFileEntry(currFiles[num]);
           }
@@ -70,14 +95,16 @@ export class SFM {
       }
     ).catch(
       (err) => {
-        // do something
-        console.log(err);
+        console.log("traverse", err);
       }
     );
   }
 
   generateFileKey(){
-    var last = this.files.length - 1;
+    if(this.files != null)
+      var last = this.files.length - 1;
+    else
+      return 0;
     var newKey = 0;
     if(last > -1)
       newKey = this.files[last]['key'] + 1;
@@ -85,38 +112,83 @@ export class SFM {
   }
   
   createFileEntry(fileEntry){
+    var present = 0;
+    this.files.forEach(element => {
+      if(element['name'] == fileEntry['name'])
+        present = 1;
+    });
+    if(present == 1)
+      return;
     let fileKey = this.generateFileKey();
-    var newFile;
-    newFile = fileEntry;
+    var newFile = fileEntry;
     newFile['key'] = fileKey;
+    console.log(newFile);
     this.files[fileKey] = newFile;
+    console.log(this.files);
     this.storage.set(this.KEY_FILES, this.files);
     this.populateMetaData(fileKey);
+    this.events.publish("file entry created");
   }
 
   populateMetaData(key){
-    this.file.readAsText(cordova.file.externalRootDirectory, this.files[key]['fullPath'].slice(1)).then(
+    this.file.readAsText(this.file.externalRootDirectory, this.files[key]['fullPath'].slice(1)).then(
       (text) => {
         console.log(text);
-        this.populateTopics(key, text); 
+        this.populateTopics(key, text);
       }
     ).catch(
       (err) => {
-        // do something
         console.log(err);
       }
     )
   }
 
   populateTopics(key, text){
-    let headers = new Headers();
-    headers.append("x-textrazor-key","b043156ea6a956b7b7cee9c9fdbead629578a609caace754ad13f958");
-    headers.append("accept-encoding", "application/gzip");
-    headers.append("content-type", "application/x-www-form-urlencoded");
+    let headers = new Headers(
+      {
+        "x-textrazor-key": "b043156ea6a956b7b7cee9c9fdbead629578a609caace754ad13f958",
+        "accept-encoding": "application/gzip",
+        "content-type": "application/json"
+      }
+    );
+    let content = "text=" + encodeURIComponent(text) + "&extractors=" + encodeURIComponent("topics");
+    this.http.post('https://api.textrazor.com', content, {headers: headers})
+    .subscribe(res => {
+      var topics = res.json()['response']['topics'];
+      var num, topicsArray = [];
+      for(num = 0; num < 5; num++)
+      {
+        topicsArray[num] = topics[num]['label'];
+        this.topicsSet.add(topics[num]['label']);
+      }
+      this.files[key]['topics'] = topicsArray;
+      this.storage.set(this.KEY_FILES, this.files);
+      this.storage.set(this.KEY_TOPICS, this.topicsSet);
+    }, (err) => {
+      console.log(err);
+    });
+  }
 
-    let data = {
-      extractors: "topics",
-      ""
-    }
+  getTopicsList(){
+    return Array.from(this.topicsSet);
+  }
+
+  getFilesList(){
+    return this.files;
+  }
+
+  getTopics(){
+    var promise = new Promise((resolve, reject) => {
+      this.storage.get(this.KEY_TOPICS).then((topics) => {
+        if(!topics){
+          this.topicsSet = new Set();
+        }
+        else{
+          this.topicsSet = new Set(topics);
+        }
+        resolve(this.getTopicsList());
+      })
+    })
+    return promise;
   }
 }
