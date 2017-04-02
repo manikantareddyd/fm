@@ -46,6 +46,36 @@ export class SFM {
       ...
     ]
   */
+
+  initFS(){
+    this.traverseFS("test");
+  }
+
+  traverseFS(root){
+    if(root[0]==="/")
+      root = root.slice(1);
+    this.file.listDir(cordova.file.externalRootDirectory, root).then(
+      (currFiles) => {
+        var num = 0;
+        for(num = 0; num < currFiles.length; num++){
+          if(currFiles[num]['isDirectory']){
+            // If directory go inside
+            this.traverseFS(currFiles[num]['fullPath'])
+          }
+          else{
+            // If FIle add to db
+            this.createFileEntry(currFiles[num]);
+          }
+        }
+      }
+    ).catch(
+      (err) => {
+        // do something
+        console.log(err);
+      }
+    );
+  }
+
   generateFileKey(){
     var last = this.files.length - 1;
     var newKey = 0;
@@ -54,23 +84,39 @@ export class SFM {
     return newKey;
   }
   
-  createFileEntry(file){
+  createFileEntry(fileEntry){
     let fileKey = this.generateFileKey();
-    return fileKey;
+    var newFile;
+    newFile = fileEntry;
+    newFile['key'] = fileKey;
+    this.files[fileKey] = newFile;
+    this.storage.set(this.KEY_FILES, this.files);
+    this.populateMetaData(fileKey);
   }
 
-  getFilesList(){
-    // this.file.listDir(cordova.file.externalRootDirectory, "Audio").then(
-    //   (currFiles) => {
-    //     // do something
-    //     console.log("pppp")
-    //     console.log(currFiles);
-    //   }
-    // ).catch(
-    //   (err) => {
-    //     // do something
-    //     console.log(err);
-    //   }
-    // );
+  populateMetaData(key){
+    this.file.readAsText(cordova.file.externalRootDirectory, this.files[key]['fullPath'].slice(1)).then(
+      (text) => {
+        console.log(text);
+        this.populateTopics(key, text); 
+      }
+    ).catch(
+      (err) => {
+        // do something
+        console.log(err);
+      }
+    )
+  }
+
+  populateTopics(key, text){
+    let headers = new Headers();
+    headers.append("x-textrazor-key","b043156ea6a956b7b7cee9c9fdbead629578a609caace754ad13f958");
+    headers.append("accept-encoding", "application/gzip");
+    headers.append("content-type", "application/x-www-form-urlencoded");
+
+    let data = {
+      extractors: "topics",
+      ""
+    }
   }
 }

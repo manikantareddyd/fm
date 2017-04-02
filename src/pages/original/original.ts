@@ -32,15 +32,21 @@ export class OriginalPage {
     this.root = this.navParams.get("root");
     console.log("curr root", this.root);
     if(this.root==null)
-      this.getFilesList("");
+      this.getFilesList("test");
     else
       this.getFilesList(this.root);
+    
+    this.initFS();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad OriginalPage');
   }
   
+  initFS(){
+    this.sfm.initFS();
+  }
+
   navigateToSubDir(newRoot){
     console.log("new root", newRoot);
     this.navCtrl.push(OriginalPage,{
